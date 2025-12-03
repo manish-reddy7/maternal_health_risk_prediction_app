@@ -2,7 +2,7 @@
 
 This project is a small end‑to‑end machine learning application that predicts maternal health risk levels based on clinical parameters. It combines a trained Random Forest model, a Flask API backend, and a modern, responsive HTML/JavaScript frontend for interactive risk assessment.
 
-![Maternal Health Risk Analysis UI](screenshot.png)
+
 
 > **Important:** This application is for educational and demonstration purposes only. It is **not** a medical device and must **not** be used as a substitute for professional medical advice, diagnosis, or treatment.
 
@@ -36,7 +36,7 @@ ml_project/
 ├─ index.html                 # Frontend UI (served at /)
 ├─ Maternal Health Risk Data Set.csv  # Original dataset used for training
 ├─ maternal_health_model.pkl  # Trained Random Forest model (GridSearchCV)
-└─ ml_project - Copy.ipynb    # Jupyter notebook with EDA and model training
+└─ ml_project .ipynb    # Jupyter notebook with EDA and model training
 ```
 
 ---
