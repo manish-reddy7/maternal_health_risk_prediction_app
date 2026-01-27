@@ -2,7 +2,7 @@
 
 A demo machine learning web application that predicts maternal health risk levels based on clinical parameters using a trained Random Forest model.
 
-image1.png
+[image1.png](https://github.com/manish-reddy7/maternal_health_risk_prediction_app/blob/d9616078d24696c2c376da3a69821fea174f1b0d/image1.png)
 
 > **⚠️ Disclaimer:** This is a demonstration project for educational purposes only. It is **NOT** a medical device and must **NOT** be used as a substitute for professional medical advice, diagnosis, or treatment.
 
