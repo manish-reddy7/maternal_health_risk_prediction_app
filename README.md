@@ -1,153 +1,75 @@
 # Maternal Health Risk Prediction App
 
-This project is a small end‑to‑end machine learning application that predicts maternal health risk levels based on clinical parameters. It combines a trained Random Forest model, a Flask API backend, and a modern, responsive HTML/JavaScript frontend for interactive risk assessment.
+A demo machine learning web application that predicts maternal health risk levels based on clinical parameters using a trained Random Forest model.
 
+![Maternal Health Risk Analysis Demo](image1)
 
+> **⚠️ Disclaimer:** This is a demonstration project for educational purposes only. It is **NOT** a medical device and must **NOT** be used as a substitute for professional medical advice, diagnosis, or treatment.
 
-> **Important:** This application is for educational and demonstration purposes only. It is **not** a medical device and must **not** be used as a substitute for professional medical advice, diagnosis, or treatment.
+---
+
+## Overview
+
+This project demonstrates an end-to-end machine learning workflow:
+- Data preprocessing and exploratory data analysis
+- Model training with hyperparameter tuning (GridSearchCV)
+- Flask API backend for serving predictions
+- Modern, responsive web UI for user interaction
 
 ---
 
 ## Features
 
-- **Machine‑learning model**
-  - Random Forest classifier trained on the *Maternal Health Risk Data Set*.
-  - Hyperparameter tuning using `GridSearchCV`.
-  - Model persisted as `maternal_health_model.pkl` and loaded by the API.
+### 🤖 Machine Learning Model
+- Random Forest classifier trained on the Maternal Health Risk dataset
+- Hyperparameter optimization using GridSearchCV
+- Predicts risk levels: Low, Mid, or High
+- Model persisted as `maternal_health_model.pkl`
 
-- **Flask API backend** (`app.py`)
-  - `GET /` – serves the web UI (`index.html`).
-  - `GET /health` – simple health‑check endpoint (`{"status": "healthy", "model_loaded": true}`).
-  - `POST /predict` – accepts patient data in JSON and returns predicted risk level and class probabilities.
+### 🌐 Flask API Backend
+- **`GET /`** – Serves the web interface
+- **`GET /health`** – Health check endpoint
+- **`POST /predict`** – Returns risk predictions with confidence scores
 
-- **Modern web UI** (`index.html`)
-  - Clean two‑panel layout: *Patient Information* (inputs) and *Risk Assessment* (results).
-  - Inline validation (e.g., prevents Diastolic BP greater than Systolic BP).
-  - Shows backend/model health status, risk level badge, and confidence bar.
-  - Responsive design for desktop and tablet.
+### 💻 Web Interface
+- Clean, two-panel layout for patient input and risk assessment
+- Real-time validation (e.g., systolic BP > diastolic BP)
+- Visual confidence indicators with color-coded risk levels
+- Backend status monitoring
+- Responsive design for desktop and tablet
 
 ---
 
 ## Project Structure
 
-```text
+```
 ml_project/
-├─ app.py                     # Flask API server
-├─ index.html                 # Frontend UI (served at /)
-├─ Maternal Health Risk Data Set.csv  # Original dataset used for training
-├─ maternal_health_model.pkl  # Trained Random Forest model (GridSearchCV)
-└─ ml_project .ipynb    # Jupyter notebook with EDA and model training
+├── app.py                              # Flask API server
+├── index.html                          # Frontend UI
+├── Maternal Health Risk Data Set.csv   # Training dataset
+├── maternal_health_model.pkl           # Trained model
+└── ml_project.ipynb                    # Jupyter notebook (EDA + training)
 ```
 
 ---
 
 ## How It Works
 
-1. **Training (not required to run the app)**
-   - The notebook `ml_project - Copy.ipynb`:
-     - Loads `Maternal Health Risk Data Set.csv`.
-     - Performs exploratory data analysis (EDA).
-     - Removes clearly invalid heart‑rate outliers and drops the `HeartRate` feature.
-     - Trains and tunes a Random Forest classifier using the following predictors:
-       - `Age`
-       - `SystolicBP`
-       - `DiastolicBP`
-       - `BS` (blood glucose)
-       - `BodyTemp`
-     - Saves the tuned model to `maternal_health_model.pkl`.
+### 1. Model Training
+The Jupyter notebook handles:
+- Loading and exploring the dataset
+- Data cleaning (removing outliers)
+- Feature selection: Age, SystolicBP, DiastolicBP, Blood Glucose, Body Temperature
+- Training and tuning a Random Forest classifier
+- Saving the model to `maternal_health_model.pkl`
 
-2. **Serving predictions**
-   - `app.py` loads `maternal_health_model.pkl` on startup.
-   - When the frontend submits the form, it issues a `POST /predict` with JSON:
+### 2. Prediction API
+The Flask backend:
+- Loads the pre-trained model on startup
+- Accepts patient data via POST request
+- Returns risk level prediction and confidence probabilities
 
-     ```json
-     {
-       "age": 30,
-       "systolicBP": 120,
-       "diastolicBP": 80,
-       "bs": 7.0,
-       "bodyTemp": 98.6,
-       "heartRate": 80   // optional, currently ignored by the model
-     }
-     ```
-
-   - The backend converts these values into a feature vector `[age, systolicBP, diastolicBP, bs, bodyTemp]`, calls the model, and returns:
-
-     ```json
-     {
-       "risk_level": "low risk",   // model prediction
-       "probabilities": [0.85, 0.10, 0.05]
-     }
-     ```
-
-3. **Displaying results**
-   - The UI updates the *Risk Assessment* panel:
-     - Colors the card based on `risk_level` (low / mid / high).
-     - Animates a confidence bar using the highest probability.
-     - Shows messages if the backend is unavailable or an error occurs.
-
----
-
-## Running the App Locally
-
-### Prerequisites
-
-- Python 3.9+ installed on your machine.
-- Recommended: create and activate a virtual environment.
-- Install required Python packages (for example):
-
-```bash
-pip install flask flask-cors scikit-learn pandas numpy
-```
-
-> You **do not** need to retrain the model to run the app; `maternal_health_model.pkl` is already included.
-
-### Start the Flask server
-
-From the project directory (`ml_project`):
-
-```bash
-python app.py
-```
-
-You should see output similar to:
-
-```text
-Model loaded successfully
- * Serving Flask app 'app'
- * Debug mode: on
- * Running on http://127.0.0.1:5000
-```
-
-### Open the UI
-
-- Navigate in your browser to: <http://127.0.0.1:5000/>
-- The home page will show the **Maternal Health Risk Analysis** interface (screenshot above).
-- Fill in the patient information and click **Analyze Risk Level** to see the prediction.
-
----
-
-## API Reference
-
-### `GET /health`
-
-Health‑check endpoint used by the UI.
-
-**Response (example):**
-
-```json
-{
-  "status": "healthy",
-  "model_loaded": true
-}
-```
-
-### `POST /predict`
-
-Accepts patient data and returns model predictions.
-
-**Request body:**
-
+**Example Request:**
 ```json
 {
   "age": 30,
@@ -159,10 +81,79 @@ Accepts patient data and returns model predictions.
 }
 ```
 
-> `heartRate` is currently optional and ignored by the model, but kept for future extensions and UI completeness.
+**Example Response:**
+```json
+{
+  "risk_level": "low risk",
+  "probabilities": [0.85, 0.10, 0.05]
+}
+```
 
-**Response (example):**
+### 3. Web Interface
+The UI displays:
+- Input form with validation
+- Color-coded risk assessment (green/yellow/red)
+- Animated confidence bar
+- Error handling for backend connectivity issues
 
+---
+
+## Getting Started
+
+### Prerequisites
+- Python 3.9+
+- Virtual environment (recommended)
+
+### Installation
+
+1. **Install dependencies:**
+```bash
+pip install flask flask-cors scikit-learn pandas numpy
+```
+
+2. **Run the Flask server:**
+```bash
+python app.py
+```
+
+3. **Open your browser:**
+Navigate to `http://127.0.0.1:5000/`
+
+You should see the interface shown in the screenshot above. Enter patient information and click "Analyze Risk Level" to get predictions.
+
+---
+
+## API Reference
+
+### Health Check
+```
+GET /health
+```
+**Response:**
+```json
+{
+  "status": "healthy",
+  "model_loaded": true
+}
+```
+
+### Predict Risk Level
+```
+POST /predict
+```
+**Request Body:**
+```json
+{
+  "age": 30,
+  "systolicBP": 120,
+  "diastolicBP": 80,
+  "bs": 7.0,
+  "bodyTemp": 98.6,
+  "heartRate": 80
+}
+```
+
+**Response:**
 ```json
 {
   "risk_level": "mid risk",
@@ -170,27 +161,22 @@ Accepts patient data and returns model predictions.
 }
 ```
 
----
-
-## Extending the Project
-
-Some ideas if you want to take this further:
-
-- **Retrain with additional features**
-  - Update the notebook to include `HeartRate` or other engineered features.
-  - Save a new model and adjust `app.py` and the UI to match the new feature set.
-
-- **Add authentication and logging**
-  - Protect the API and log anonymized prediction requests for auditing.
-
-- **Containerize the app**
-  - Add a `Dockerfile` and `docker-compose.yml` so the app can be run with a single `docker compose up`.
-
-- **Deploy to the cloud**
-  - Host the Flask app on a platform‑as‑a‑service (for example Azure App Service, Heroku, etc.) and serve the static UI from the same backend.
+*Note: `heartRate` is currently optional and not used by the model, but kept for future extensions.*
 
 ---
 
-## Disclaimer
+## Future Enhancements
 
-This repository is intended **only** for learning and experimentation with basic machine‑learning deployment patterns (model training, persistence, and web serving). It must **not** be used for clinical decision making or in any safety‑critical environment.
+- 🔐 Add authentication and request logging
+- 🐳 Containerize with Docker
+- ☁️ Deploy to cloud platforms (Azure, AWS, Heroku)
+- 📊 Include additional features in the model
+- 📱 Improve mobile responsiveness
+
+---
+
+## License
+
+This project is for educational and demonstration purposes only.
+
+**Medical Disclaimer:** This tool provides model-based estimates only. It is not a medical device and must not be used as a substitute for professional medical advice, diagnosis, or treatment.
